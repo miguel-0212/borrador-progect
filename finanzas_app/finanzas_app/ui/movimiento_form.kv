@@ -1,0 +1,243 @@
+<MovimientoForm>:
+
+    canvas.before:
+        Color:
+            rgba: 0.96, 0.97, 0.98, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    ScrollView:
+        do_scroll_x: False
+        scroll_timeout: 200
+        scroll_distance: 15
+
+        BoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: self.minimum_height
+            padding: 20
+            spacing: 15
+
+            # =========================
+            # HEADER
+            # =========================
+            Label:
+                text: "Dashboard Financiero"
+                font_size: 30
+                bold: True
+                size_hint_y: None
+                height: 60
+                color: 0, 0, 0, 1
+
+            # =========================
+            # RESUMEN — FIX 1: labels con color negro visible
+            # =========================
+            BoxLayout:
+                size_hint_y: None
+                height: 130
+                spacing: 12
+
+                BoxLayout:
+                    orientation: "vertical"
+                    padding: 10
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [16]
+
+                    Label:
+                        text: "Ingresos"
+                        color: 0.3, 0.3, 0.3, 1
+                        font_size: 14
+                        bold: True
+                        size_hint_y: 0.4
+
+                    Label:
+                        id: lbl_ingresos
+                        font_size: 22
+                        bold: True
+                        color: 0, 0.7, 0, 1
+                        size_hint_y: 0.6
+
+                BoxLayout:
+                    orientation: "vertical"
+                    padding: 10
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [16]
+
+                    Label:
+                        text: "Gastos"
+                        color: 0.3, 0.3, 0.3, 1
+                        font_size: 14
+                        bold: True
+                        size_hint_y: 0.4
+
+                    Label:
+                        id: lbl_gastos
+                        font_size: 22
+                        bold: True
+                        color: 0.9, 0, 0, 1
+                        size_hint_y: 0.6
+
+                BoxLayout:
+                    orientation: "vertical"
+                    padding: 10
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [16]
+
+                    Label:
+                        text: "Balance"
+                        color: 0.3, 0.3, 0.3, 1
+                        font_size: 14
+                        bold: True
+                        size_hint_y: 0.4
+
+                    Label:
+                        id: lbl_balance
+                        font_size: 22
+                        bold: True
+                        color: 0, 0.3, 1, 1
+                        size_hint_y: 0.6
+
+            # =========================
+            # FORM MOVIMIENTOS
+            # =========================
+            Label:
+                text: "Registrar movimiento"
+                size_hint_y: None
+                height: 40
+                bold: True
+                color: 0, 0, 0, 1
+
+            TextInput:
+                id: txt_fecha
+                hint_text: "Fecha (YYYY-MM-DD)"
+                size_hint_y: None
+                height: 45
+
+            TextInput:
+                id: txt_cantidad
+                hint_text: "Cantidad"
+                input_filter: "float"
+                size_hint_y: None
+                height: 45
+
+            TextInput:
+                id: txt_descripcion
+                hint_text: "Descripción"
+                size_hint_y: None
+                height: 45
+
+            Spinner:
+                id: spinner_categoria
+                text: "Seleccionar categoría"
+                size_hint_y: None
+                height: 50
+
+            # FIX 2: colores distintos por función
+            Button:
+                text: "Guardar"
+                size_hint_y: None
+                height: 50
+                background_color: 0.13, 0.7, 0.32, 1
+                background_normal: ""
+                on_press: root.guardar_movimiento()
+
+            Button:
+                text: "Gráfico"
+                size_hint_y: None
+                height: 50
+                background_color: 0.23, 0.51, 0.96, 1
+                background_normal: ""
+                on_press: root.mostrar_grafico()
+
+            Button:
+                text: "PDF"
+                size_hint_y: None
+                height: 50
+                background_color: 0.85, 0.2, 0.2, 1
+                background_normal: ""
+                on_press: root.exportar_pdf()
+
+            # =========================
+            # GESTIÓN DE CATEGORÍAS (RF3)
+            # =========================
+            Label:
+                text: "Categorías"
+                size_hint_y: None
+                height: 40
+                bold: True
+                color: 0, 0, 0, 1
+
+            Button:
+                text: "Editar categorías"
+                size_hint_y: None
+                height: 40
+                background_color: 0.9, 0.5, 0.1, 1
+                background_normal: ""
+                on_press: root.toggle_categorias()
+
+            # Panel de categorías - se inserta/elimina dinámicamente desde Python
+            # (ver toggle_categorias en movimiento_form.py)
+
+            # =========================
+            # FILTROS (RF4)
+            # =========================
+            Label:
+                text: "Filtros"
+                size_hint_y: None
+                height: 40
+                bold: True
+                color: 0, 0, 0, 1
+
+            TextInput:
+                id: txt_mes
+                hint_text: "Mes (YYYY-MM)"
+                size_hint_y: None
+                height: 45
+
+            Spinner:
+                id: spinner_tipo
+                text: "Todos"
+                values: ["Todos", "ingreso", "gasto"]
+                size_hint_y: None
+                height: 50
+
+            Button:
+                text: "Aplicar filtros"
+                size_hint_y: None
+                height: 50
+                background_color: 0.18, 0.38, 0.65, 1
+                background_normal: ""
+                on_press: root.actualizar_lista()
+
+            # =========================
+            # LISTADO MOVIMIENTOS
+            # =========================
+            Label:
+                text: "Movimientos"
+                size_hint_y: None
+                height: 40
+                bold: True
+                color: 0, 0, 0, 1
+
+            BoxLayout:
+                id: box_movimientos
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: 10
